@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\DispositivoRepository;
 use App\Repositories\IncidenciaRepository;
+use App\support\SchemaCodes;
 use InvalidArgumentException;
 
 class IncidenciaService
@@ -24,7 +25,7 @@ class IncidenciaService
         return $this->incidenciaRepo->findAll();
     }
 
-    public function obtenerPorId(int $id): ?array
+    public function obtenerPorId(string $id): ?array
     {
         $incidencia = $this->incidenciaRepo->findById($id);
         if (!$incidencia) {
@@ -33,7 +34,7 @@ class IncidenciaService
         return $incidencia;
     }
 
-    public function obtenerPorDispositivo(int $dispositivoId): array
+    public function obtenerPorDispositivo(string $dispositivoId): array
     {
         return $this->incidenciaRepo->findPorDispositivo($dispositivoId);
     }
@@ -43,47 +44,41 @@ class IncidenciaService
      */
     public function registrar(array $data): array
     {
-        if (empty($data['dispositivo_id'])) {
+        if (empty($data['dis_id'])) {
             throw new InvalidArgumentException("Debe seleccionar un dispositivo afectado.");
         }
 
-        $dispId = (int)$data['dispositivo_id'];
+        $dispId = trim((string)$data['dis_id']);
         $dispositivo = $this->dispositivoRepo->findById($dispId);
         if (!$dispositivo) {
             throw new InvalidArgumentException("El dispositivo seleccionado (ID: {$dispId}) no existe.");
         }
 
-        if (empty(trim($data['titulo'] ?? ''))) {
+        $data['incid_titulo'] = trim($data['incid_titulo'] ?? '');
+        $data['incid_desc'] = trim($data['incid_desc'] ?? '');
+        if ($data['incid_titulo'] === '') {
             throw new InvalidArgumentException("El título de la incidencia es obligatorio.");
         }
 
-        if (empty(trim($data['descripcion'] ?? ''))) {
+        if ($data['incid_desc'] === '') {
             throw new InvalidArgumentException("La descripción de la incidencia es obligatoria.");
         }
 
-        $gravedadesPermitidas = ['baja', 'media', 'alta', 'critica'];
-        $gravedad = strtolower(trim($data['gravedad'] ?? 'media'));
-        if (!in_array($gravedad, $gravedadesPermitidas, true)) {
-            $gravedad = 'media';
-        }
-        $data['gravedad'] = $gravedad;
-
-        if (empty($data['estado'])) {
-            $data['estado'] = 'abierta';
-        }
+        $data['dis_id'] = $dispId;
+        $data['incid_tipo'] = SchemaCodes::incidentType($data['incid_tipo'] ?? 'OT');
+        $data['incid_prioridad'] = SchemaCodes::incidentPriorityCode($data['incid_prioridad'] ?? 'MD');
+        $data['incid_stat'] = SchemaCodes::incidentStatusCode($data['incid_stat'] ?? 'A');
+        $data['incid_origen'] = SchemaCodes::incidentOrigin($data['incid_origen'] ?? 'U');
 
         $id = $this->incidenciaRepo->create($data);
         return $this->incidenciaRepo->findById($id);
     }
 
-    public function actualizarEstado(int $id, string $estado): array
+    public function actualizarEstado(string $id, string $estado): array
     {
         $this->obtenerPorId($id);
 
-        $estadosValidos = ['abierta', 'en_proceso', 'resuelta'];
-        if (!in_array($estado, $estadosValidos, true)) {
-            throw new InvalidArgumentException("Estado de incidencia inválido. Permitidos: " . implode(', ', $estadosValidos));
-        }
+        $estado = SchemaCodes::incidentStatusCode($estado);
 
         $this->incidenciaRepo->cambiarEstado($id, $estado);
         return $this->incidenciaRepo->findById($id);

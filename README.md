@@ -102,7 +102,22 @@ Sistema_Gestion_Redes/
 
 ## 💻 Puesta en Marcha
 
-### 1. Iniciar el Servidor de Desarrollo
+### 1. Crear las Tablas
+Inicia MySQL e importa `database/schema.sql` desde phpMyAdmin. El script crea `gestion_redes` y las tres tablas definidas en la hoja de cálculo. Usa `CREATE ... IF NOT EXISTS` y no borra tablas ni registros existentes. Si ya hay tablas con otra estructura, respáldalas y verifica su esquema antes de importar.
+
+El esquema conserva los nombres y longitudes de la hoja. Los IDs se generan aleatoriamente con prefijo `D` (5 caracteres), `M` (8) e `I` (10), verificando que no estén en uso. Los campos `mon_ucpu` y `mon_umem` quedan `NULL` hasta que exista una fuente que mida esos recursos. Al eliminar un dispositivo, MySQL elimina también sus monitoreos e incidencias asociados.
+
+La aplicación también guarda la ubicación del dispositivo en `dis_ubicacion`. Para una base existente, ejecuta una vez `database/migrations/20261124_add_device_location.sql` después de importar el esquema; la migración es aditiva y conserva los registros actuales. Para cargar dos dispositivos de prueba, ejecuta `database/seed_test_devices.sql`. El script omite cada fila si su ID o IP ya está ocupado; la dirección `192.0.2.10` es reservada para documentación y no responderá al ping.
+
+Como el Excel fija longitudes pero no define catálogos, la aplicación usa estos códigos:
+
+- `dis_tipo`: `RT` router, `SW` switch, `AP` punto de acceso, `FW` firewall, `SV` servidor, `PC` host/PC, `OT` otro.
+- `dis_stat`: `A` activo, `I` inactivo, `F` en falla, `W` advertencia.
+- `incid_tipo`: `NW` red, `HW` hardware, `SW` software, `OT` otro.
+- `incid_prioridad`: `BJ` baja, `MD` media, `AL` alta, `CR` crítica.
+- `incid_stat`: `A` abierta, `P` en proceso, `R` resuelta. `incid_origen`: `U` usuario, `S` sistema.
+
+### 2. Iniciar el Servidor de Desarrollo
 Puedes usar el servidor integrado de PHP apuntando a la carpeta `public`:
 
 ```bash
@@ -115,3 +130,6 @@ Luego abre tu navegador en:
 - Monitoreo en vivo: [http://localhost:8000/monitoreo](http://localhost:8000/monitoreo)
 - Incidencias: [http://localhost:8000/incidencias](http://localhost:8000/incidencias)
 - Health API: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+### 3. Probar la API en Postman
+Importa `tests/postman/Gestion_Redes.postman_collection.json` y ejecuta la colección en orden contra una base de pruebas, después de cargar los dos registros de prueba. `baseUrl` apunta por defecto a `http://localhost:8000`; `testDeviceIp` usa `127.0.0.1` para comprobar conectividad y debe estar libre en la base. La colección comprueba listado, registro (201), IP inválida/duplicada (422), edición, ping individual y masivo, incidencias, métricas y eliminación. El último request borra el dispositivo temporal y sus registros relacionados.

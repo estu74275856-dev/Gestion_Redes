@@ -4,44 +4,44 @@ namespace App\Models;
 
 class Dispositivo
 {
-    public ?int $id;
-    public string $nombre;
-    public string $ip;
-    public ?string $mac;
-    public string $tipo;
-    public ?string $ubicacion;
-    public string $estado;
-    public ?string $ultimo_monitoreo;
-    public ?string $created_at;
-    public ?string $updated_at;
+    public string $dis_id;
+    public string $dis_nombre;
+    public string $dis_tipo;
+    public string $dis_ip;
+    public ?string $dis_mac;
+    public ?string $dis_sisop;
+    public ?string $dis_obs;
+    public string $dis_stat;
+    public ?string $dis_feing;
+    public ?string $dis_femod;
 
     public function __construct(array $data = [])
     {
-        $this->id = isset($data['id']) ? (int)$data['id'] : null;
-        $this->nombre = trim($data['nombre'] ?? '');
-        $this->ip = trim($data['ip'] ?? '');
-        $this->mac = !empty($data['mac']) ? trim($data['mac']) : null;
-        $this->tipo = $data['tipo'] ?? 'Otro';
-        $this->ubicacion = !empty($data['ubicacion']) ? trim($data['ubicacion']) : null;
-        $this->estado = $data['estado'] ?? 'desconocido';
-        $this->ultimo_monitoreo = $data['ultimo_monitoreo'] ?? null;
-        $this->created_at = $data['created_at'] ?? null;
-        $this->updated_at = $data['updated_at'] ?? null;
+        $this->dis_id = $data['dis_id'] ?? '';
+        $this->dis_nombre = trim($data['dis_nombre'] ?? '');
+        $this->dis_tipo = $data['dis_tipo'] ?? 'OT';
+        $this->dis_ip = trim($data['dis_ip'] ?? '');
+        $this->dis_mac = !empty($data['dis_mac']) ? trim($data['dis_mac']) : null;
+        $this->dis_sisop = !empty($data['dis_sisop']) ? trim($data['dis_sisop']) : null;
+        $this->dis_obs = !empty($data['dis_obs']) ? trim($data['dis_obs']) : null;
+        $this->dis_stat = $data['dis_stat'] ?? 'I';
+        $this->dis_feing = $data['dis_feing'] ?? null;
+        $this->dis_femod = $data['dis_femod'] ?? null;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'nombre' => $this->nombre,
-            'ip' => $this->ip,
-            'mac' => $this->mac,
-            'tipo' => $this->tipo,
-            'ubicacion' => $this->ubicacion,
-            'estado' => $this->estado,
-            'ultimo_monitoreo' => $this->ultimo_monitoreo,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'dis_id' => $this->dis_id,
+            'dis_nombre' => $this->dis_nombre,
+            'dis_tipo' => $this->dis_tipo,
+            'dis_ip' => $this->dis_ip,
+            'dis_mac' => $this->dis_mac,
+            'dis_sisop' => $this->dis_sisop,
+            'dis_obs' => $this->dis_obs,
+            'dis_stat' => $this->dis_stat,
+            'dis_feing' => $this->dis_feing,
+            'dis_femod' => $this->dis_femod,
         ];
     }
 }

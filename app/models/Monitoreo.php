@@ -4,32 +4,35 @@ namespace App\Models;
 
 class Monitoreo
 {
-    public ?int $id;
-    public int $dispositivo_id;
-    public string $estado;
-    public ?int $latencia_ms;
-    public ?string $detalles;
-    public ?string $fecha_monitoreo;
+    public string $mon_id;
+    public string $dis_id;
+    public string $mon_conexion;
+    public ?float $mon_latencia;
+    public ?float $mon_ucpu;
+    public ?float $mon_umem;
+    public ?string $mon_fec;
 
     public function __construct(array $data = [])
     {
-        $this->id = isset($data['id']) ? (int)$data['id'] : null;
-        $this->dispositivo_id = (int)($data['dispositivo_id'] ?? 0);
-        $this->estado = $data['estado'] ?? 'desconocido';
-        $this->latencia_ms = isset($data['latencia_ms']) ? (int)$data['latencia_ms'] : null;
-        $this->detalles = $data['detalles'] ?? null;
-        $this->fecha_monitoreo = $data['fecha_monitoreo'] ?? null;
+        $this->mon_id = $data['mon_id'] ?? '';
+        $this->dis_id = $data['dis_id'] ?? '';
+        $this->mon_conexion = $data['mon_conexion'] ?? 'desconocido';
+        $this->mon_latencia = isset($data['mon_latencia']) ? (float)$data['mon_latencia'] : null;
+        $this->mon_ucpu = isset($data['mon_ucpu']) ? (float)$data['mon_ucpu'] : null;
+        $this->mon_umem = isset($data['mon_umem']) ? (float)$data['mon_umem'] : null;
+        $this->mon_fec = $data['mon_fec'] ?? null;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'dispositivo_id' => $this->dispositivo_id,
-            'estado' => $this->estado,
-            'latencia_ms' => $this->latencia_ms,
-            'detalles' => $this->detalles,
-            'fecha_monitoreo' => $this->fecha_monitoreo,
+            'mon_id' => $this->mon_id,
+            'dis_id' => $this->dis_id,
+            'mon_conexion' => $this->mon_conexion,
+            'mon_latencia' => $this->mon_latencia,
+            'mon_ucpu' => $this->mon_ucpu,
+            'mon_umem' => $this->mon_umem,
+            'mon_fec' => $this->mon_fec,
         ];
     }
 }

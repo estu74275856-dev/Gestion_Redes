@@ -4,38 +4,44 @@ namespace App\Models;
 
 class Incidencia
 {
-    public ?int $id;
-    public int $dispositivo_id;
-    public string $titulo;
-    public string $descripcion;
-    public string $gravedad;
-    public string $estado;
-    public ?string $fecha_reporte;
-    public ?string $fecha_cierre;
+    public string $incid_id;
+    public string $dis_id;
+    public string $incid_titulo;
+    public string $incid_desc;
+    public string $incid_tipo;
+    public string $incid_prioridad;
+    public string $incid_stat;
+    public string $incid_origen;
+    public ?string $incid_feing;
+    public ?string $incid_fesol;
 
     public function __construct(array $data = [])
     {
-        $this->id = isset($data['id']) ? (int)$data['id'] : null;
-        $this->dispositivo_id = (int)($data['dispositivo_id'] ?? 0);
-        $this->titulo = trim($data['titulo'] ?? '');
-        $this->descripcion = trim($data['descripcion'] ?? '');
-        $this->gravedad = $data['gravedad'] ?? 'media';
-        $this->estado = $data['estado'] ?? 'abierta';
-        $this->fecha_reporte = $data['fecha_reporte'] ?? null;
-        $this->fecha_cierre = $data['fecha_cierre'] ?? null;
+        $this->incid_id = $data['incid_id'] ?? '';
+        $this->dis_id = $data['dis_id'] ?? '';
+        $this->incid_titulo = trim($data['incid_titulo'] ?? '');
+        $this->incid_desc = trim($data['incid_desc'] ?? '');
+        $this->incid_tipo = $data['incid_tipo'] ?? 'OT';
+        $this->incid_prioridad = $data['incid_prioridad'] ?? 'MD';
+        $this->incid_stat = $data['incid_stat'] ?? 'A';
+        $this->incid_origen = $data['incid_origen'] ?? 'U';
+        $this->incid_feing = $data['incid_feing'] ?? null;
+        $this->incid_fesol = $data['incid_fesol'] ?? null;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'dispositivo_id' => $this->dispositivo_id,
-            'titulo' => $this->titulo,
-            'descripcion' => $this->descripcion,
-            'gravedad' => $this->gravedad,
-            'estado' => $this->estado,
-            'fecha_reporte' => $this->fecha_reporte,
-            'fecha_cierre' => $this->fecha_cierre,
+            'incid_id' => $this->incid_id,
+            'dis_id' => $this->dis_id,
+            'incid_titulo' => $this->incid_titulo,
+            'incid_desc' => $this->incid_desc,
+            'incid_tipo' => $this->incid_tipo,
+            'incid_prioridad' => $this->incid_prioridad,
+            'incid_stat' => $this->incid_stat,
+            'incid_origen' => $this->incid_origen,
+            'incid_feing' => $this->incid_feing,
+            'incid_fesol' => $this->incid_fesol,
         ];
     }
 }

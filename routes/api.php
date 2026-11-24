@@ -32,11 +32,11 @@ return function (App $app) {
         $group->group('/dispositivos', function (RouteCollectorProxy $dispGroup) {
             $dispGroup->get('', [DispositivoApiController::class, 'index']);                     // Listar todos
             $dispGroup->get('/metricas', [DispositivoApiController::class, 'metrics']);          // Métricas de estados
-            $dispGroup->get('/{id:[0-9]+}', [DispositivoApiController::class, 'show']);          // Obtener por ID
+            $dispGroup->get('/{id:[A-Za-z0-9]+}', [DispositivoApiController::class, 'show']);    // Obtener por ID
             $dispGroup->post('', [DispositivoApiController::class, 'create']);                   // HU1: Registrar dispositivo
-            $dispGroup->put('/{id:[0-9]+}', [DispositivoApiController::class, 'update']);        // HU2: Actualizar dispositivo
-            $dispGroup->delete('/{id:[0-9]+}', [DispositivoApiController::class, 'delete']);     // Eliminar dispositivo
-            $dispGroup->get('/{id:[0-9]+}/incidencias', [IncidenciaApiController::class, 'porDispositivo']); // Incidencias de este equipo
+            $dispGroup->put('/{id:[A-Za-z0-9]+}', [DispositivoApiController::class, 'update']);  // HU2: Actualizar dispositivo
+            $dispGroup->delete('/{id:[A-Za-z0-9]+}', [DispositivoApiController::class, 'delete']); // Eliminar dispositivo
+            $dispGroup->get('/{id:[A-Za-z0-9]+}/incidencias', [IncidenciaApiController::class, 'porDispositivo']); // Incidencias de este equipo
         });
 
         // ==========================================================
@@ -44,9 +44,9 @@ return function (App $app) {
         // ==========================================
         $group->group('/monitoreo', function (RouteCollectorProxy $monGroup) {
             $monGroup->post('/ping-all', [MonitoreoApiController::class, 'pingAll']);             // HU3: Ping a toda la red
-            $monGroup->post('/ping/{id:[0-9]+}', [MonitoreoApiController::class, 'ping']);         // HU3: Ping a un equipo
+            $monGroup->post('/ping/{id:[A-Za-z0-9]+}', [MonitoreoApiController::class, 'ping']);   // HU3: Ping a un equipo
             $monGroup->get('/historial', [MonitoreoApiController::class, 'historial']);            // Historial general reciente
-            $monGroup->get('/dispositivo/{id:[0-9]+}', [MonitoreoApiController::class, 'historialDispositivo']); // Historial por equipo
+            $monGroup->get('/dispositivo/{id:[A-Za-z0-9]+}', [MonitoreoApiController::class, 'historialDispositivo']); // Historial por equipo
         });
 
         // ==========================================================
@@ -55,9 +55,9 @@ return function (App $app) {
         $group->group('/incidencias', function (RouteCollectorProxy $incGroup) {
             $incGroup->get('', [IncidenciaApiController::class, 'index']);                         // Listar incidencias
             $incGroup->get('/metricas', [IncidenciaApiController::class, 'metrics']);              // Resumen de incidencias
-            $incGroup->get('/{id:[0-9]+}', [IncidenciaApiController::class, 'show']);             // Detalle de una incidencia
+            $incGroup->get('/{id:[A-Za-z0-9]+}', [IncidenciaApiController::class, 'show']);       // Detalle de una incidencia
             $incGroup->post('', [IncidenciaApiController::class, 'create']);                        // HU4: Registrar incidencia
-            $incGroup->patch('/{id:[0-9]+}/estado', [IncidenciaApiController::class, 'cambiarEstado']); // Actualizar estado (abierta, en proceso, resuelta)
+            $incGroup->patch('/{id:[A-Za-z0-9]+}/estado', [IncidenciaApiController::class, 'cambiarEstado']); // Actualizar estado (abierta, en proceso, resuelta)
         });
     });
 };

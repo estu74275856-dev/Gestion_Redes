@@ -37,7 +37,7 @@ class DispositivoApiController extends BaseApiController
     public function show(Request $request, Response $response, array $args): Response
     {
         try {
-            $id = (int)$args['id'];
+            $id = $args['id'];
             $dispositivo = $this->service->obtenerPorId($id);
             return $this->json($response, $dispositivo);
         } catch (Throwable $e) {
@@ -70,7 +70,7 @@ class DispositivoApiController extends BaseApiController
     public function update(Request $request, Response $response, array $args): Response
     {
         try {
-            $id = (int)$args['id'];
+            $id = $args['id'];
             $data = (array)($request->getParsedBody() ?? []);
             $actualizado = $this->service->actualizar($id, $data);
             return $this->json($response, [
@@ -89,7 +89,7 @@ class DispositivoApiController extends BaseApiController
     public function delete(Request $request, Response $response, array $args): Response
     {
         try {
-            $id = (int)$args['id'];
+            $id = $args['id'];
             $this->service->eliminar($id);
             return $this->json($response, [
                 'mensaje' => "Dispositivo con ID {$id} eliminado correctamente."
